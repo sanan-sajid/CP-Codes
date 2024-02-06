@@ -1,2 +1,4 @@
 *.bin
 *.exe
+CSES\.cph
+CSES\test.cpp
