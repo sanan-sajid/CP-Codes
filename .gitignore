@@ -2,3 +2,4 @@
 *.exe
 CSES\.cph
 CSES\test.cpp
+.vscode 
