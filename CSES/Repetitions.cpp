@@ -329,9 +329,25 @@ int32_t main()
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   ll t = 1;
-  cin >> t;
+  // cin >> t;
   while (t--)
   {
+    string s;
+    cin >> s;
+    int n = s.size();
+    int res = 0;
+    int i = 0, j = 0;
+    while (j < n)
+    {
+      while (s[i] != s[j])
+      {
+        i++;
+      }
+      res = max(res, j - i + 1);
+      j++;
+    }
+
+    cout << res;
 
     cout << '\n';
   }
