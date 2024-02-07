@@ -334,31 +334,23 @@ int32_t main()
   {
     int n, k;
     cin >> n >> k;
-    int idk = 1;
+    int a = 1, b = n;
     vector<int> res(n + 1);
-    int i;
-    for (i = k + 1;; i += k)
+    for (int i = 1; i <= k; i++)
     {
-      res[i % (n)] = idk;
-      idk++;
-      if (idk == (n / 2) + 1)
-        break;
-    }
-    i++;
-    i = i % k;
 
-    for (;; i += k)
-    {
-      res[i % (n)] = idk;
-      idk++;
-      if (idk == n + 1)
-        break;
+      for (int j = i; j <= n; j += k)
+      {
+        if ((i % 2))
+          res[j] = a++;
+        else
+          res[j] = b--;
+      }
     }
-    // cout << i << endl;
+
     for (int i = 1; i <= n; i++)
-    {
       cout << res[i] << " ";
-    }
+
     cout << '\n';
   }
   return 0;
