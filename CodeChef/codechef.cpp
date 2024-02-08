@@ -290,11 +290,11 @@ int nPr(int n, int r, int p = n1)
 }
 bool customComparator(pair<int, int> &a, pair<int, int> &b)
 {
-  if (a.first == b.first)
+  if (a.second == b.second)
   {
-    return a.second > b.second;
+    return a.first > b.first;
   }
-  return a.first < b.first;
+  return a.second < b.second;
 }
 int ceil2(int a, int b)
 {
@@ -332,7 +332,31 @@ int32_t main()
   cin >> t;
   while (t--)
   {
-    
+    int n;
+    cin >> n;
+    vector<pair<int, int>> res;
+    for (int i = 0; i < 2 * n; i++)
+    {
+      int x;
+      cin >> x;
+      res.push_back({i, x});
+    }
+    sort(all(res), customComparator);
+    // cout << res;
+    // cout << endl;
+    vector<pair<int, int>> v;
+    for (int i = 0; i < 2 * n; i += 2)
+    {
+      v.push_back({abs(res[i].first - res[i + 1].first), res[i].second});
+    }
+    // cout << v;
+    sort(all(v));
+    reverse(all(v));
+    for (auto it : v)
+    {
+      cout << it.second << " ";
+    }
+    // cout << v;
 
     cout << '\n';
   }

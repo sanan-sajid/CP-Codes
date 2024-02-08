@@ -324,94 +324,39 @@ int ceil2(int a, int b)
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-void deciToBin(int n, int k)
-{
-  string res(k, '0');
-  // cout << res;
-  int i = 0;
-  while (i < k)
-  {
-    // cout << (1LL << i) << " " << n << endl;
-    if ((1LL << i) & n)
-    {
-      // bit is set
-      res[i] = '1';
-    }
-    i++;
-  }
-  reverse(all(res));
-  cout << res << '\n';
-  ;
-}
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
-  ll t = 1;
-  // cin >> t;
-  while (t--)
+  int n;
+  cin >> n;
+  int a[1005][2];
+  for (int i = 0; i < n; i++)
   {
-    int n;
-    cin >> n;
-    // 000 - 0
-    // 001,010,100  1
-    // 110,011,101   2
-    // 111  3
-    // 0 1 2 3 2 1 2 1
-    // 3 2 1 2 3 2 3
-    // deciToBin(8, 4);
-    vector<vector<int>> v(n + 1);
-    for (int i = 0; i < (1LL << (n)); i++)
+    if (i == 0)
     {
-      int setBit = __builtin_popcountll(i);
-      v[setBit].push_back(i);
+      cin >> a[i][0] >> a[i][1];
+      a[n][0] = a[i][0];
+      a[n][1] = a[i][1];
     }
-    int cnt = 0;
-    int i = 0;
-    // bool f1=0,f2=0;
-    for (; i < (1LL << (n)); i++)
+    else
     {
-      // cout << i << endl;
-      deciToBin(v[i].back(), n);
-      v[i].pop_back();
-      cnt++;
+      cin >> a[i][0] >> a[i][1];
     }
-    // while (cnt < power(2, n))
-    // {
-    //   cout << i << ":";
-    //   deciToBin(v[i].back(), n);
-    //   v[i].pop_back();
-
-    //   if (i + 1 == n && v[i + 1].size() != 0)
-    //   {
-    //     i++;
-    //     continue;
-    //   }
-    //   if (i == 0)
-    //     i++;
-    //   else if (i == n)
-    //     i--;
-    //   else
-    //   {
-    //     if (v[i + 1].size() > v[i].size() && i != 1)
-    //     {
-    //       i++;
-    //     }
-    //     else if (v[i + 1].size() < v[i].size() && i != 0)
-    //     {
-    //       i--;
-    //     }
-    //   }
-
-    //   cnt++;
-    // }
-    // for (int i = 0; i <= n; i++)
-    // {
-    //   deciToBin(v[i].back(), n);
-    //   v[i].pop_back();
-    // }
-
-    cout << '\n';
   }
+
+  int res = 0;
+  for (int i = 0; i < n; i++)
+  {
+    res += (a[i][0] * a[i + 1][1]);
+    // cout << (a[i][0] * a[i + 1][1]) << endl;
+  }
+  for (int i = 0; i < n; i++)
+  {
+    res -= (a[i][1] * a[i + 1][0]);
+  }
+
+  cout << abs(res);
+
   return 0;
 }

@@ -329,25 +329,18 @@ int32_t main()
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   ll t = 1;
-  // c/in >> t;
+  // cin >> t;
   while (t--)
   {
     int n;
     cin >> n;
+    // cout<<0<<endl;
     for (int i = 1; i <= n; i++)
     {
-      if (i == 1)
-        cout << 0;
-      else if (i == 2)
-        cout << 6;
-      else
-      {
-        int res = 0;
-
-        cout << res / 2;
-      }
-
-      cout << "\n";
+      int temp = i * i;
+      int total = (temp * (temp - 1)) / 2;
+      total -= (4 * (i - 2) * (i - 1));
+      cout << total << '\n';
     }
 
     cout << '\n';
