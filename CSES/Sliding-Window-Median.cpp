@@ -332,9 +332,43 @@ int32_t main()
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   ll t = 1;
-  cin >> t;
+  // cin >> t;
   while (t--)
   {
+
+    int n, k;
+    cin >> n >> k;
+    pbdsMS s;
+    vector<int> v(n);
+    cin >> v;
+    int i = 0, j = 0;
+
+    while (j < n)
+    {
+      if (i == 0)
+      {
+        while (j != k - 1)
+        {
+          s.insert(v[j]);
+          // cout << v[j];
+          j++;
+        }
+      }
+      s.insert(v[j]);
+      // cout << i << " " << j << endl;
+      // for (auto it : s)
+      //   cout << it << " ";
+      if (k & 1)
+        cout << *s.find_by_order(k / 2) << " ";
+      else
+        cout << *s.find_by_order(k / 2 - 1) << " ";
+
+      j++;
+      // s.insert(v[j]);
+      s.erase(s.find_by_order(s.order_of_key(v[i])));
+
+      i++;
+    }
 
     cout << '\n';
   }
