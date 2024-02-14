@@ -362,7 +362,7 @@ int main()
     {
       int target = ((n * (n + 1)) / 4);
       // cout << target << endl;
-      cout << (f(1, target, n) / 2) % m;
+      cout << (f(1, target, n)/2) %m;
     }
 
     cout << '\n';

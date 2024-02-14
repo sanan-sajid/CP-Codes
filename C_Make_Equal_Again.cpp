@@ -335,7 +335,51 @@ int32_t main()
   cin >> t;
   while (t--)
   {
-     
+    int n;
+    cin >> n;
+    vector<int> v(n);
+    cin >> v;
+    // int i = 0, j = n - 1;
+    int start = 0;
+    for (int i = 0; i < n; i++)
+    {
+      if (v[i] == v[0])
+      {
+        start++;
+      }
+      else
+      {
+        break;
+      }
+    }
+    int end = 0;
+    for (int i = n - 1; i >= 0; i--)
+    {
+      if (v[i] == v[n - 1])
+      {
+        end++;
+      }
+      else
+      {
+        break;
+      }
+    }
+    int res = INT_MAX;
+    if (start == n)
+    {
+      cout << 0 << endl;
+      continue;
+    }
+    if (v[0] == v[n - 1])
+    {
+      res = min(res, n - start - end);
+    }
+    else
+    {
+      // cout << start << " " << end;
+      res = min(res, n - max(start, end));
+    }
+    cout << res;
     cout << '\n';
   }
   return 0;

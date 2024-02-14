@@ -335,7 +335,27 @@ int32_t main()
   cin >> t;
   while (t--)
   {
-     
+    int n;
+    cin >> n;
+    vector<int> v(n);
+    cin >> v;
+    int sum = accumulate(all(v), 0LL);
+    int f = 1;
+    int req = 0;
+    for (int i = n - 1; i >= 0; i--)
+    {
+      req += sum / n - v[i];
+      // cout << req << " ";
+      if (req < 0)
+      {
+        f = 0;
+        break;
+      }
+    }
+    if (f)
+      cout << "YES";
+    else
+      cout << "NO";
     cout << '\n';
   }
   return 0;

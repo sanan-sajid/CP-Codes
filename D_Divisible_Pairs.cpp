@@ -335,7 +335,34 @@ int32_t main()
   cin >> t;
   while (t--)
   {
-     
+    int n, x, y;
+    cin >> n >> x >> y;
+    vector<int> v(n);
+    cin >> v;
+    int res = 0;
+    map<pair<int, int>, int> mp;
+    for (int i = 0; i < n; i++)
+    {
+      int idk = v[i] % x;
+      int idk1 = v[i] % y;
+      int aa = (x - idk);
+      // int bb = (y - idk1);
+      res += mp[{(aa), idk1}];
+
+      // cout << aa << " " << bb << endl ;
+      // mp[{idk, idk1}]++;
+
+      if (idk == 0)
+      {
+        mp[{x, idk1}]++;
+      }
+      else
+      {
+        mp[{idk, idk1}]++;
+      }
+    }
+
+    cout << res;
     cout << '\n';
   }
   return 0;

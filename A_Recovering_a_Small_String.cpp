@@ -335,7 +335,32 @@ int32_t main()
   cin >> t;
   while (t--)
   {
-     
+    int n;
+    cin >> n;
+    vector<string> res;
+    for (int i = 1; i <= 26; i++)
+    {
+      for (int j = 1; j <= 26; j++)
+      {
+        for (int k = 1; k <= 26; k++)
+        {
+          if (i + j + k == n)
+          {
+            string s;
+
+            s += i + 'a' - 1;
+            s += j + 'a' - 1;
+            s += k + 'a' - 1;
+            sort(all(s));
+            res.push_back(s);
+          }
+        }
+      }
+    }
+    sort(all(res));
+    cout << res[0];
+
+    // cout << s;
     cout << '\n';
   }
   return 0;
