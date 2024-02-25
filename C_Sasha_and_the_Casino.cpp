@@ -327,20 +327,6 @@ int ceil2(int a, int b)
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-int numOfDigits(int n)
-{
-  return floor(log10(n) + 1);
-}
-int numOfZero(int n)
-{
-  int res = 0;
-  while (n % 10 == 0)
-  {
-    res++;
-    n = n / 10;
-  }
-  return res;
-}
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
@@ -349,53 +335,6 @@ int32_t main()
   cin >> t;
   while (t--)
   {
-    int n, m;
-    cin >> n >> m;
-    vector<int> v(n);
-    cin >> v;
-    vector<int> idk;
-    int res = 0;
-    for (auto it : v)
-    {
-      int a = 0, b = 0;
-      int tmp = it;
-      while (tmp % 10 == 0)
-      {
-        a++;
-        tmp = tmp / 10;
-      }
-      tmp = it;
-
-      while (tmp != 0)
-      {
-        b++;
-        tmp = tmp / 10;
-      }
-      res += b;
-      if (a != 0)
-      https: // www.youtube.com/watch?v=J358jFK8CWE
-      {
-        idk.push_back(a);
-      }
-      // res += numOfDigits(it);
-      // int noIdea = numOfZero(it);
-      // if (noIdea != 0)
-      //   idk.push_back(noIdea);
-    }
-    sort(all(idk));
-    reverse(all(idk));
-    int cnt = 0;
-    for (int i = 0; i < min(ll(idk.size()), n); i += 2)
-    {
-      cnt += idk[i];
-    }
-    // cout << idk << endl;
-    // ;
-    // cout << res << " " << cnt << e/ndl;
-    res -= cnt;
-    cout << (res > m ? "Sasha" : "Anna");
-    // cout << res;
-    // cout << idk;
 
     cout << '\n';
   }
