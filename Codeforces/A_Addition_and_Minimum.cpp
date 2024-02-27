@@ -327,14 +327,127 @@ int ceil2(int a, int b)
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
+class SegTree
+{
+  std::vector<int> segTree, lazy;
+
+public:
+  void buildTree(int &n, std::vector<int> a)
+  {
+    int num = n;
+    n = (1LL << ll(std::ceil(log2(n * 1.0))));
+    segTree.resize(2 * n);
+    lazy.resize(2 * n);
+    for (int i = 0; i <= num - 1; i++)
+    {
+      segTree[n + i] = a[i];
+    }
+    for (int i = n - 1; i >= 1; i--)
+    {
+      segTree[i] = min(segTree[2 * i], segTree[2 * i + 1]);
+    }
+  }
+
+  int rangeQuery(int node, int left, int right, int l, int r)
+  {
+    if (lazy[node])
+    {
+      segTree[node] += lazy[node];
+      if (left != right)
+      {
+        lazy[2 * node] += lazy[node];
+        lazy[2 * node + 1] += lazy[node];
+      }
+      lazy[node] = 0;
+    }
+    if (left >= l && right <= r)
+    {
+      return segTree[node];
+    }
+    else if (right < l || left > r)
+    {
+      return INT_MAX;
+    }
+    else
+    {
+      int mid = (left + right) / 2;
+      return min(rangeQuery(2 * node, left, mid, l, r), rangeQuery(2 * node + 1, mid + 1, right, l, r));
+    }
+  }
+  void rangeUpdate(int node, int left, int right, int l, int r, int newVal)
+  {
+    if (lazy[node])
+    {
+      segTree[node] += lazy[node];
+      if (left != right)
+      {
+        lazy[2 * node] += lazy[node];
+        lazy[2 * node + 1] += lazy[node];
+      }
+      lazy[node] = 0;
+    }
+    if (left >= l && right <= r)
+    {
+      // segTree[node] += newVal * (right - left + 1);
+      segTree[node] += newVal;
+
+      if (left != right)
+      {
+        lazy[2 * node] += newVal;
+        lazy[2 * node + 1] += newVal;
+      }
+    }
+    else if (right < l || left > r)
+    {
+      return;
+    }
+    else
+    {
+      int mid = (left + right) / 2;
+      rangeUpdate(2 * node, left, mid, l, r, newVal);
+      rangeUpdate(2 * node + 1, mid + 1, right, l, r, newVal);
+      segTree[node] = min(segTree[2 * node], segTree[2 * node + 1]);
+    }
+  }
+};
+
+// intialization
+// SegTree seg;
+// vector<int> range(n);
+// seg.buildTree(n, range);
+
+// seg.rangeUpdate(1, 0, n - 1, l, r, 1);
+// int times = seg.rangeQuery(1, 0, n - 1, u, u);
+// // first 3 parameter will be same 1,0,n-1
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   ll t = 1;
-  cin >> t;
+  // cin >> t;
   while (t--)
   {
+    int n, q;
+    cin >> n >> q;
+    vector<int> v(n);
+    SegTree sg;
+    sg.buildTree(n, v);
+    while (q--)
+    {
+      int type;
+      cin >> type;
+      int l, r, v;
+      cin >> l >> r;
+      if (type == 1)
+      {
+        cin >> v;
+        sg.rangeUpdate(1, 0, n - 1, l - 1, r - 2, v);
+      }
+      else
+      {
+        cout << sg.rangeQuery(1, 0, n - 1, l - 1, r - 2) << endl;
+      }
+    }
 
     cout << '\n';
   }
