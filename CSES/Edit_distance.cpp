@@ -327,23 +327,34 @@ int ceil2(int a, int b)
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-vector<vector<int>> dp(105, vector<int>(100005, -1));
-void rec(vector<int> &v, int index, int sum)
+vector<vector<int>> dp(5005, vector<int>(5005, -1));
+int f(string &a, string &b, int i, int j)
 {
-  if (index == v.size())
+  // a hi bara hoga always in size
+  // base case
+  if (i >= a.size())
   {
-    dp[index][sum] = 1;
-    return;
+    return b.size() - (j);
   }
-  if (dp[index][sum] != -1)
-    return; // already explored
+  if (j >= b.size())
+  {
+    return a.size() - (i);
+  }
 
-  // taking
-  rec(v, index + 1, sum + v[index]);
-  // not-taking
-  rec(v, index + 1, sum);
-  dp[index][sum] = 1; // marking as explored
+  if (a[i] == b[j])
+  {
+    return f(a, b, i + 1, j + 1);
+  }
+  if (dp[i][j] != -1)
+    return dp[i][j];
+  // add char == remove char
+  int aa = f(a, b, i + 1, j) + 1;
+  int bb = f(a, b, i, j + 1) + 1;
+
+  int cc = f(a, b, i + 1, j + 1) + 1;
+  return dp[i][j] = min({aa, bb, cc});
 }
+
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
@@ -352,26 +363,11 @@ int32_t main()
   // cin >> t;
   while (t--)
   {
-    int n;
-    cin >> n;
-    vector<int> v(n);
-    cin >> v;
-    rec(v, 0, 0);
-    set<int> st;
-    int res = 0;
-    // for (int i = 0; i < n; i++)
-    // {
-    for (int j = 0; j <= 100000; j++)
-    {
-      // res += (dp[i][j] == 1);
-      if (dp[v.size()][j] == 1 && j != 0)
-        st.insert(j);
-    }
-    // }
-    cout << st.size() << endl;
-    for (auto it : st)
-      cout << it << " ";
-    // cout << res;
+    string a, b;
+    cin >> a >> b;
+    if (b.size() > a.size())
+      swap(a, b);
+    cout << f(a, b, 0, 0);
 
     cout
         << '\n';

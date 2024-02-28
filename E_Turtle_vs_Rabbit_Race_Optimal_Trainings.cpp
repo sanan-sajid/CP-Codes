@@ -327,54 +327,56 @@ int ceil2(int a, int b)
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-vector<vector<int>> dp(105, vector<int>(100005, -1));
-void rec(vector<int> &v, int index, int sum)
-{
-  if (index == v.size())
-  {
-    dp[index][sum] = 1;
-    return;
-  }
-  if (dp[index][sum] != -1)
-    return; // already explored
-
-  // taking
-  rec(v, index + 1, sum + v[index]);
-  // not-taking
-  rec(v, index + 1, sum);
-  dp[index][sum] = 1; // marking as explored
-}
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   ll t = 1;
-  // cin >> t;
+  cin >> t;
   while (t--)
   {
     int n;
     cin >> n;
     vector<int> v(n);
     cin >> v;
-    rec(v, 0, 0);
-    set<int> st;
-    int res = 0;
-    // for (int i = 0; i < n; i++)
-    // {
-    for (int j = 0; j <= 100000; j++)
+    vector<int> pre(n + 1);
+    for (int i = 1; i <= n; i++)
     {
-      // res += (dp[i][j] == 1);
-      if (dp[v.size()][j] == 1 && j != 0)
-        st.insert(j);
-    }
-    // }
-    cout << st.size() << endl;
-    for (auto it : st)
-      cout << it << " ";
-    // cout << res;
 
-    cout
-        << '\n';
+      pre[i] = pre[i - 1] + v[i - 1];
+    }
+    int q;
+    cin >> q;
+    while (q--)
+    {
+      int l, u;
+      cin >> l >> u;
+      l--;
+      int maxi = (2 * u + 1) / 2;
+      int ind = lower_bound(all(pre), maxi + pre[l]) - pre.begin();
+
+      int a = pre[l];
+      int res = LONG_LONG_MIN;
+      int resf = ind;
+      res = max(res, (pre[ind] - a) * u - (((pre[ind] - a) * (pre[ind] - 1 - a))) / 2);
+      if (l != ind - 1 && ind - 1 > 0 && res <= (pre[ind - 1] - a) * u - (((pre[ind - 1] - a) * (pre[ind - 1] - 1 - a))) / 2)
+      {
+        res = max(res, (pre[ind - 1] - a) * u - (((pre[ind - 1] - a) * (pre[ind - 1] - 1 - a))) / 2);
+        resf = ind - 1;
+      }
+
+      else if (ind + 1 < n + 1 && res < (pre[ind + 1] - a) * u - (((pre[ind + 1] - a) * (pre[ind + 1] - a - 1))) / 2)
+      {
+
+        resf = ind + 1;
+      }
+      if (resf > n)
+        resf = n;
+      cout << resf << " ";
+      //  << " " << ind << " " << res << " " << pre[ind - 1] * u - ((pre[ind - 1] * (pre[ind - 1] - 1))) / 2 << " " << pre[ind + 1] * u - ((pre[ind + 1] * (pre[ind + 1] - 1))) / 2 << endl;
+      ;
+    }
+    cout << '\n';
   }
   return 0;
 }

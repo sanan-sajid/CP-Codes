@@ -327,22 +327,47 @@ int ceil2(int a, int b)
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-vector<vector<int>> dp(105, vector<int>(100005, -1));
-void rec(vector<int> &v, int index, int sum)
+int m;
+const int modo = 1e9 + 7;
+vector<vector<int>> dp(100005, vector<int>(105, -1));
+int f(int index, vector<int> &v, int prev)
 {
   if (index == v.size())
-  {
-    dp[index][sum] = 1;
-    return;
-  }
-  if (dp[index][sum] != -1)
-    return; // already explored
+    return 1;
 
-  // taking
-  rec(v, index + 1, sum + v[index]);
-  // not-taking
-  rec(v, index + 1, sum);
-  dp[index][sum] = 1; // marking as explored
+  if (v[index] != 0)
+  {
+    if (prev != -1)
+    {
+      if (abs(prev - v[index]) <= 1)
+        return f(index + 1, v, v[index]); // valid answer
+      else
+        return 0;
+    }
+    else
+      return f(index + 1, v, v[index]);
+  }
+
+  if (prev == -1)
+  {
+    int idk = 0;
+    for (int i = 1; i <= m; i++)
+    {
+      idk = (idk % modo + f(index + 1, v, i) % modo) % modo;
+    }
+    return idk % modo;
+  }
+  if (dp[index][prev] != -1)
+    return dp[index][prev];
+  // int a = b = c = 0;
+  int a = 0, b = 0, c = 0;
+  if (prev - 1 <= m && prev - 1 >= 1)
+    a = f(index + 1, v, prev - 1) % modo;
+  if (prev <= m && prev >= 1)
+    b = f(index + 1, v, prev) % modo;
+  if (prev + 1 <= m && prev + 1 >= 1)
+    c = f(index + 1, v, prev + 1) % modo;
+  return dp[index][prev] = ((a + b + c) % modo);
 }
 int32_t main()
 {
@@ -353,28 +378,11 @@ int32_t main()
   while (t--)
   {
     int n;
-    cin >> n;
+    cin >> n >> m;
     vector<int> v(n);
     cin >> v;
-    rec(v, 0, 0);
-    set<int> st;
-    int res = 0;
-    // for (int i = 0; i < n; i++)
-    // {
-    for (int j = 0; j <= 100000; j++)
-    {
-      // res += (dp[i][j] == 1);
-      if (dp[v.size()][j] == 1 && j != 0)
-        st.insert(j);
-    }
-    // }
-    cout << st.size() << endl;
-    for (auto it : st)
-      cout << it << " ";
-    // cout << res;
-
-    cout
-        << '\n';
+    cout << f(0, v, -1);
+    cout << '\n';
   }
   return 0;
 }

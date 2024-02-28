@@ -327,23 +327,6 @@ int ceil2(int a, int b)
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-vector<vector<int>> dp(105, vector<int>(100005, -1));
-void rec(vector<int> &v, int index, int sum)
-{
-  if (index == v.size())
-  {
-    dp[index][sum] = 1;
-    return;
-  }
-  if (dp[index][sum] != -1)
-    return; // already explored
-
-  // taking
-  rec(v, index + 1, sum + v[index]);
-  // not-taking
-  rec(v, index + 1, sum);
-  dp[index][sum] = 1; // marking as explored
-}
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
@@ -356,25 +339,10 @@ int32_t main()
     cin >> n;
     vector<int> v(n);
     cin >> v;
-    rec(v, 0, 0);
-    set<int> st;
-    int res = 0;
-    // for (int i = 0; i < n; i++)
-    // {
-    for (int j = 0; j <= 100000; j++)
-    {
-      // res += (dp[i][j] == 1);
-      if (dp[v.size()][j] == 1 && j != 0)
-        st.insert(j);
-    }
-    // }
-    cout << st.size() << endl;
-    for (auto it : st)
-      cout << it << " ";
-    // cout << res;
+    int sum = accumulate(all(v), 0LL);
+    cout << max(sum, 2 * (*max_element(all(v))));
 
-    cout
-        << '\n';
+    cout << '\n';
   }
   return 0;
 }
