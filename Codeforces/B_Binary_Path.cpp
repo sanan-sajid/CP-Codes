@@ -337,45 +337,59 @@ int32_t main()
   {
     int n;
     cin >> n;
-    vector<int> v(n);
-    cin >> v;
-    vector<int> pre(n + 1);
-    for (int i = 1; i <= n; i++)
+    vector<string> v(2);
+    cin >> v[0] >> v[1];
+    string res;
+    bool f = 0;
+    for (int i = 0; i < n; i++)
     {
+      res += v[f][i];
+      if (i == n - 1)
+      {
+        if (f == 0)
+        {
+          res += v[1][n - 1];
+        }
+        else
+        {
+          break;
+        }
+        break;
+      }
+      if (v[0][i + 1] < v[1][i])
+      {
+        // do nothing
+      }
+      else if (v[0][i + 1] > v[1][i])
+      {
+        // switch
+        f = 1;
+        for (int j = i; j < n; j++)
+          res += v[1][j];
 
-      pre[i] = pre[i - 1] + v[i - 1];
+        break;
+      }
+      else
+      {
+        // both equal so move left
+        // ie do nothing
+      }
     }
-    int q;
-    cin >> q;
-    while (q--)
+    int cnt = 1;
+    for (int i = 0; i < n - 1; i++)
     {
-      int l, u;
-      cin >> l >> u;
-      l--;
-      int maxi = (2 * u + 1) / 2;
-      int ind = lower_bound(all(pre), maxi + pre[l]) - pre.begin();
-
-      int a = pre[l];
-      int res = LONG_LONG_MIN;
-      int resf = ind;
-      res = max(res, (pre[ind] - a) * u - (((pre[ind] - a) * (pre[ind] - 1 - a))) / 2);
-      if (l != ind - 1 && ind - 1 > 0 && res <= (pre[ind - 1] - a) * u - (((pre[ind - 1] - a) * (pre[ind - 1] - 1 - a))) / 2)
+      if (v[0][i + 1] == v[1][i])
       {
-        res = max(res, (pre[ind - 1] - a) * u - (((pre[ind - 1] - a) * (pre[ind - 1] - 1 - a))) / 2);
-        resf = ind - 1;
+        cnt++;
       }
-
-      else if (ind + 1 < n + 1 && res < (pre[ind + 1] - a) * u - (((pre[ind + 1] - a) * (pre[ind + 1] - a - 1))) / 2)
-      {
-
-        resf = ind + 1;
-      }
-      if (resf > n)
-        resf = n;
-      cout << resf << " ";
-      //  << " " << ind << " " << res << " " << pre[ind - 1] * u - ((pre[ind - 1] * (pre[ind - 1] - 1))) / 2 << " " << pre[ind + 1] * u - ((pre[ind + 1] * (pre[ind + 1] - 1))) / 2 << endl;
-      ;
+      else if (v[0][i + 1] < v[1][i])
+        cnt = 1;
+      else
+        break;
     }
+
+    cout << res << "\n"
+         << cnt;
     cout << '\n';
   }
   return 0;

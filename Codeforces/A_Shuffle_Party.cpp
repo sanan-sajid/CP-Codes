@@ -337,45 +337,8 @@ int32_t main()
   {
     int n;
     cin >> n;
-    vector<int> v(n);
-    cin >> v;
-    vector<int> pre(n + 1);
-    for (int i = 1; i <= n; i++)
-    {
-
-      pre[i] = pre[i - 1] + v[i - 1];
-    }
-    int q;
-    cin >> q;
-    while (q--)
-    {
-      int l, u;
-      cin >> l >> u;
-      l--;
-      int maxi = (2 * u + 1) / 2;
-      int ind = lower_bound(all(pre), maxi + pre[l]) - pre.begin();
-
-      int a = pre[l];
-      int res = LONG_LONG_MIN;
-      int resf = ind;
-      res = max(res, (pre[ind] - a) * u - (((pre[ind] - a) * (pre[ind] - 1 - a))) / 2);
-      if (l != ind - 1 && ind - 1 > 0 && res <= (pre[ind - 1] - a) * u - (((pre[ind - 1] - a) * (pre[ind - 1] - 1 - a))) / 2)
-      {
-        res = max(res, (pre[ind - 1] - a) * u - (((pre[ind - 1] - a) * (pre[ind - 1] - 1 - a))) / 2);
-        resf = ind - 1;
-      }
-
-      else if (ind + 1 < n + 1 && res < (pre[ind + 1] - a) * u - (((pre[ind + 1] - a) * (pre[ind + 1] - a - 1))) / 2)
-      {
-
-        resf = ind + 1;
-      }
-      if (resf > n)
-        resf = n;
-      cout << resf << " ";
-      //  << " " << ind << " " << res << " " << pre[ind - 1] * u - ((pre[ind - 1] * (pre[ind - 1] - 1))) / 2 << " " << pre[ind + 1] * u - ((pre[ind + 1] * (pre[ind + 1] - 1))) / 2 << endl;
-      ;
-    }
+    int idk = log2(n);
+    cout << power(2, idk);
     cout << '\n';
   }
   return 0;

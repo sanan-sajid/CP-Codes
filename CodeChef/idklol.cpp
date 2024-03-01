@@ -335,46 +335,51 @@ int32_t main()
   cin >> t;
   while (t--)
   {
-    int n;
-    cin >> n;
-    vector<int> v(n);
-    cin >> v;
-    vector<int> pre(n + 1);
-    for (int i = 1; i <= n; i++)
+    int n, a, b;
+    cin >> n >> a >> b;
+    // if (a >= n)
+    // {
+    //   cout << "Alice\n";
+    //   continue;
+    // }
+    if (a == 1 && b == 1)
     {
-
-      pre[i] = pre[i - 1] + v[i - 1];
+      if (n % 2 == 0)
+        cout << "Bob";
+      else
+        cout << "Alice";
     }
-    int q;
-    cin >> q;
-    while (q--)
+    else
     {
-      int l, u;
-      cin >> l >> u;
-      l--;
-      int maxi = (2 * u + 1) / 2;
-      int ind = lower_bound(all(pre), maxi + pre[l]) - pre.begin();
-
-      int a = pre[l];
-      int res = LONG_LONG_MIN;
-      int resf = ind;
-      res = max(res, (pre[ind] - a) * u - (((pre[ind] - a) * (pre[ind] - 1 - a))) / 2);
-      if (l != ind - 1 && ind - 1 > 0 && res <= (pre[ind - 1] - a) * u - (((pre[ind - 1] - a) * (pre[ind - 1] - 1 - a))) / 2)
+      if (b == 1)
       {
-        res = max(res, (pre[ind - 1] - a) * u - (((pre[ind - 1] - a) * (pre[ind - 1] - 1 - a))) / 2);
-        resf = ind - 1;
+        cout << "Alice";
+      }
+      else if (a == 1)
+      {
+        cout << "Bob";
+      }
+      else
+      {
+        cout << "Alice";
       }
 
-      else if (ind + 1 < n + 1 && res < (pre[ind + 1] - a) * u - (((pre[ind + 1] - a) * (pre[ind + 1] - a - 1))) / 2)
-      {
-
-        resf = ind + 1;
-      }
-      if (resf > n)
-        resf = n;
-      cout << resf << " ";
-      //  << " " << ind << " " << res << " " << pre[ind - 1] * u - ((pre[ind - 1] * (pre[ind - 1] - 1))) / 2 << " " << pre[ind + 1] * u - ((pre[ind + 1] * (pre[ind + 1] - 1))) / 2 << endl;
-      ;
+      // if (b == 1)
+      // {
+      //   cout << "Alice";
+      // }
+      // else
+      // {
+      //   // b is not 1
+      //   if (a == 1)
+      //   {
+      //     cout << "Bob";
+      //   }
+      //   else
+      //   {
+      //     cout << "Alice";
+      //   }
+      // }
     }
     cout << '\n';
   }
