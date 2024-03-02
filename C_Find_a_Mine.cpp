@@ -345,6 +345,9 @@ int32_t main()
     cout << "? " << 1 << " " << dis + 2 - 1 << endl;
     if (dis + 2 - n <= n)
       cout << "? " << dis + 2 - n << " " << 1 << endl;
+    else
+    {
+    }
 
     cout << '\n';
   }

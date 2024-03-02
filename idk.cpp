@@ -327,6 +327,85 @@ int ceil2(int a, int b)
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
+vector<int> a;
+vector<vector<int>> seg;
+int n, m;
+// Root node covers the range [0,n-1] or [0,n)
+
+vector<int> create(int num)
+{
+  vector<int> temp;
+  temp.push_back(num);
+  return temp;
+}
+
+vector<int> combine(const vector<int> &a, const vector<int> &b)
+{
+  int m = a.size(), n = b.size();
+  int i = 0, j = 0;
+  vector<int> c;
+
+  while (i < m && j < n)
+  {
+    if (a[i] <= b[j])
+    {
+      c.push_back(a[i]);
+      i++;
+    }
+    else
+    {
+      c.push_back(b[j]);
+      j++;
+    }
+  }
+
+  while (i < m)
+  {
+    c.push_back(a[i]);
+    i++;
+  }
+
+  while (j < n)
+  {
+    c.push_back(b[j]);
+    j++;
+  }
+  return c;
+}
+
+// Range is [l,r-1] or [l,r)
+void build(int id = 1, int l = 0, int r = n)
+{
+  if (r - l == 1)
+  {
+    seg[id] = create(a[l]);
+    return;
+  }
+  int mid = (l + r) / 2;
+  build(id * 2, l, mid);
+  build(id * 2 + 1, mid, r);
+  seg[id] = combine(seg[id * 2], seg[id * 2 + 1]);
+}
+// Time complexity: O(n*log(n))
+
+// x : no. of rooms
+int query(int x, int y, int k, int id = 1, int l = 0, int r = n)
+{
+  if (r <= x || l >= y)
+    return 0;
+  if (l >= x && r <= y)
+  {
+    int ans =
+        (int)seg[id].size() -
+        (upper_bound(seg[id].begin(), seg[id].end(), k) - seg[id].begin());
+    return ans;
+  }
+  int mid = (l + r) / 2;
+  int l_ans = query(x, y, k, id * 2, l, mid);
+  int r_ans = query(x, y, k, id * 2 + 1, mid, r);
+  return l_ans + r_ans;
+}
+
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
@@ -335,29 +414,6 @@ int32_t main()
   // cin >> t;
   while (t--)
   {
-    // multiset<int> st;
-    int n, q;
-    cin >> n >> q;
-    map<int, int> mp;
-    vector<int> v(n);
-    mp[0] = n;
-    while (q--)
-    {
-      int a, b;
-      cin >> a >> b;
-      int temp = v[a - 1];
-      v[a - 1] += b;
-      mp[v[a - 1]]++;
-      mp[temp]--;
-      if (mp[temp] == 0)
-        mp.erase(temp);
-      // for (auto it : mp)
-      // {
-      //   cout << it.first << " " << it.second << endl;
-      // }
-      cout << mp.size() << endl;
-      ;
-    }
 
     cout << '\n';
   }

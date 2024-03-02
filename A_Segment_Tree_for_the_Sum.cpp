@@ -10,7 +10,7 @@ struct segtree
     size = 1;
     while (size < n)
       size *= 2;
-    sums.resize(2 * size, -1);
+    sums.resize(2 * size, 0LL);
   }
 };
 int main()
