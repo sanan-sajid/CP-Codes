@@ -330,42 +330,75 @@ bool sortd(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second > b.
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-const int N = 2 * 1e5 + 5;
-int v[N];
-void rec(int node, int parent, vector<vector<int>> &adjList)
+bool f(vector<pair<int, int>> &v, vector<int> &q, int k, int n)
 {
-  for (auto it : adjList[node])
+  vector<int> temp(n);
+  for (int i = 0; i < k; i++)
   {
-    // cout << parent << " " << node << endl;
-    if (it == parent)
-      continue;
-    rec(it, node, adjList);
-    v[node] += v[it] + 1;
+    temp[q[i] - 1] = 1;
   }
-  return;
+
+  vector<int> pre(n + 1);
+  for (int i = 1; i <= n; i++)
+  {
+    pre[i] = pre[i - 1] + temp[i - 1];
+  }
+  for (auto it : v)
+  {
+    int l = it.first, r = it.second;
+    int one = pre[r] - pre[l - 1];
+    int zero = (r - l + 1) - one;
+    if (one > zero)
+      return true;
+  }
+
+  return false;
 }
+
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   ll t = 1;
+  cin >> t;
   while (t--)
   {
-    int n;
-    cin >> n;
-    vector<vector<int>> adjList(n + 1);
-    for (int i = 2; i <= n; i++)
+    int n, m;
+    cin >> n >> m;
+
+    vector<pair<int, int>> v(m);
+    for (int i = 0; i < m; i++)
     {
-      int x;
-      cin >> x;
-      adjList[i].push_back(x);
-      adjList[x].push_back(i);
+      int x, y;
+      cin >> x >> y;
+      v[i] = {x, y};
     }
-    rec(1, -1, adjList);
-    for (int i = 1; i <= n; i++)
+    int q;
+    cin >> q;
+    vector<int> queries(q);
+    cin >> queries;
+    int l = 1, r = q;
+    // do a check for r (all q ) if no then -1
+    if (!f(v, queries, q, n))
     {
-      cout << v[i] << " ";
+      cout << -1 << endl;
+      continue;
     }
+    while (l <= r)
+    { // fffffttt
+      int mid = (l + r) / 2;
+      if (f(v, queries, mid, n))
+      {
+        r = mid - 1;
+      }
+      else
+      {
+        l = mid + 1;
+      }
+    }
+    cout << l;
+    // cout << f(v, queries, 2, n);
+
     cout << '\n';
   }
   return 0;

@@ -331,16 +331,17 @@ bool sortd(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second > b.
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
 const int N = 2 * 1e5 + 5;
-int v[N];
-void rec(int node, int parent, vector<vector<int>> &adjList)
+int dis[N] = {};
+void dfs(int node, int parent, vector<vector<int>> &adjList)
 {
+
+  // cout << node << " " << 0 << endl;
   for (auto it : adjList[node])
   {
-    // cout << parent << " " << node << endl;
     if (it == parent)
       continue;
-    rec(it, node, adjList);
-    v[node] += v[it] + 1;
+    dis[it] = dis[node] + 1;
+    dfs(it, node, adjList);
   }
   return;
 }
@@ -353,19 +354,35 @@ int32_t main()
   {
     int n;
     cin >> n;
-    vector<vector<int>> adjList(n + 1);
-    for (int i = 2; i <= n; i++)
+    if (n == 1)
     {
-      int x;
-      cin >> x;
-      adjList[i].push_back(x);
-      adjList[x].push_back(i);
+      cout << 0;
+      return 0;
     }
-    rec(1, -1, adjList);
+    vector<vector<int>> adjList(n + 1);
+    for (int i = 0; i < n; i++)
+    {
+      int u, v;
+      cin >> u >> v;
+      adjList[u].push_back(v);
+      adjList[v].push_back(u);
+    }
+    dfs(1, -1, adjList);
+    int maxi = *max_element(dis, dis + n + 1);
+    int idk;
     for (int i = 1; i <= n; i++)
     {
-      cout << v[i] << " ";
+      if (dis[i] == maxi)
+      {
+        idk = i;
+        break;
+      }
     }
+    memset(dis, 0, sizeof(dis));
+    dfs(idk, -1, adjList);
+    for (int i = 1; i <= n; i++)
+      cout << dis[i] << " ";
+
     cout << '\n';
   }
   return 0;

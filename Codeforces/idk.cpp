@@ -301,6 +301,9 @@ int ceil2(int a, int b)
 {
   return (a + b - 1) / b;
 }
+// Sorting
+bool sorta(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second < b.second); }
+bool sortd(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second > b.second); }
 /// ====================================BIT TRICKS==================================================
 // TO CHECK IF iTH BIT IS SET OR NOT
 // for (int j = 0; j < 31; j++)
@@ -327,83 +330,40 @@ int ceil2(int a, int b)
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-vector<int> a;
-vector<vector<int>> seg;
-int n, m;
-// Root node covers the range [0,n-1] or [0,n)
-
-vector<int> create(int num)
+const int MAXN = 105;
+int dp[MAXN][MAXN];
+int dp1[MAXN][MAXN];
+int n;
+int rec(int i, int j, vector<vector<int>> &r, vector<vector<int>> &d, int a, int b)
 {
-  vector<int> temp;
-  temp.push_back(num);
-  return temp;
-}
+  // cout << i << " " << j << endl;
+  if (i < 0 || j < 0 || i >= n || j >= n)
+    return INT_MAX;
 
-vector<int> combine(const vector<int> &a, const vector<int> &b)
-{
-  int m = a.size(), n = b.size();
-  int i = 0, j = 0;
-  vector<int> c;
+  if (dp[i][j] != -1)
+    return dp[i][j];
 
-  while (i < m && j < n)
-  {
-    if (a[i] <= b[j])
-    {
-      c.push_back(a[i]);
-      i++;
-    }
-    else
-    {
-      c.push_back(b[j]);
-      j++;
-    }
-  }
-
-  while (i < m)
-  {
-    c.push_back(a[i]);
-    i++;
-  }
-
-  while (j < n)
-  {
-    c.push_back(b[j]);
-    j++;
-  }
-  return c;
-}
-
-// Range is [l,r-1] or [l,r)
-void build(int id = 1, int l = 0, int r = n)
-{
-  if (r - l == 1)
-  {
-    seg[id] = create(a[l]);
-    return;
-  }
-  int mid = (l + r) / 2;
-  build(id * 2, l, mid);
-  build(id * 2 + 1, mid, r);
-  seg[id] = combine(seg[id * 2], seg[id * 2 + 1]);
-}
-// Time complexity: O(n*log(n))
-
-// x : no. of rooms
-int query(int x, int y, int k, int id = 1, int l = 0, int r = n)
-{
-  if (r <= x || l >= y)
+  if (i == a && j == b)
     return 0;
-  if (l >= x && r <= y)
-  {
-    int ans =
-        (int)seg[id].size() -
-        (upper_bound(seg[id].begin(), seg[id].end(), k) - seg[id].begin());
-    return ans;
-  }
-  int mid = (l + r) / 2;
-  int l_ans = query(x, y, k, id * 2, l, mid);
-  int r_ans = query(x, y, k, id * 2 + 1, mid, r);
-  return l_ans + r_ans;
+
+  int down = d[i][j] + rec(i + 1, j, r, d, a, b);
+  int right = r[i][j] + rec(i, j + 1, r, d, a, b);
+
+  return dp[i][j] = min(down, right);
+}
+int rec1(int i, int j, vector<vector<int>> &r, vector<vector<int>> &d, int a, int b)
+{
+  // cout << i << " " << j << endl;
+  if (i < 0 || j < 0 || i >= n || j >= n)
+    return INT_MAX;
+
+  if (i == a && j == b)
+    return 0;
+  if (dp1[i][j] != -1)
+    return dp1[i][j];
+  int down = d[i][j] + rec1(i + 1, j, r, d, a, b);
+  int right = r[i][j] + rec1(i, j + 1, r, d, a, b);
+  return dp1[i][j] = min(down, right);
 }
 
 int32_t main()
@@ -411,9 +371,62 @@ int32_t main()
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   ll t = 1;
-  // cin >> t;
   while (t--)
   {
+    cin >> n;
+
+    int maxi = -1;
+    vector<vector<int>> p(n, vector<int>(n));
+    vector<vector<int>> r(n, vector<int>(n));
+    vector<vector<int>> d(n, vector<int>(n));
+    for (int i = 0; i < n; i++)
+    {
+      for (int j = 0; j < n; j++)
+      {
+        cin >> p[i][j];
+        maxi = max(maxi, p[i][j]);
+      }
+    }
+    for (int i = 0; i < n; i++)
+    {
+      for (int j = 0; j < n - 1; j++)
+      {
+        cin >> r[i][j];
+      }
+    }
+    for (int i = 0; i < n - 1; i++)
+    {
+      for (int j = 0; j < n; j++)
+      {
+        cin >> d[i][j];
+      }
+    }
+    vector<pair<int, int>> idk;
+    for (int i = 0; i < n; i++)
+    {
+      for (int j = 0; j < n; j++)
+      {
+
+        idk.push_back({i, j});
+      }
+    }
+    int res = 1e18;
+
+    for (auto it : idk)
+    {
+      memset(dp, -1, sizeof(dp));
+      memset(dp1, -1, sizeof(dp1));
+      int time = 0;
+      int x = it.first, y = it.second;
+      cout << x;
+      // cout << x << " " << y << " " << rec(0, 0, r, d, x, y) << " " << rec1(x, y, r, d, n - 1, n - 1) << endl;
+      int cost1 = rec(0, 0, r, d, x, y);
+      time += ceil2(cost1, p[0][0]);
+      time += ceil2(rec1(x, y, r, d, n - 1, n - 1), p[x][y]);
+      res = min(res, time);
+    }
+
+    cout << res + (2 * (n - 1));
 
     cout << '\n';
   }

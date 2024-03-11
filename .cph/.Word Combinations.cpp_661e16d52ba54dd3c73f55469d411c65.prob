@@ -1,0 +1,1 @@
+{"name":"Local: Word Combinations","url":"c:\\Users\\LENOVO\\Desktop\\Coding Stuff\\code\\Word Combinations.cpp","tests":[{"id":1710075086599,"input":"ababc\n4\nab\nabab\nc\ncb","output":"2"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\LENOVO\\Desktop\\Coding Stuff\\code\\Word Combinations.cpp","group":"local","local":true}

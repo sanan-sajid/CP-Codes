@@ -330,42 +330,20 @@ bool sortd(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second > b.
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-const int N = 2 * 1e5 + 5;
-int v[N];
-void rec(int node, int parent, vector<vector<int>> &adjList)
-{
-  for (auto it : adjList[node])
-  {
-    // cout << parent << " " << node << endl;
-    if (it == parent)
-      continue;
-    rec(it, node, adjList);
-    v[node] += v[it] + 1;
-  }
-  return;
-}
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   ll t = 1;
+  // cin >> t;
   while (t--)
   {
-    int n;
-    cin >> n;
-    vector<vector<int>> adjList(n + 1);
-    for (int i = 2; i <= n; i++)
-    {
-      int x;
-      cin >> x;
-      adjList[i].push_back(x);
-      adjList[x].push_back(i);
-    }
-    rec(1, -1, adjList);
-    for (int i = 1; i <= n; i++)
-    {
-      cout << v[i] << " ";
-    }
+    // Number of positive integral solutions of equation x1 + x2 + ….. + xn = k is given by (k-1)! / (n-1)! * (k-n)!.
+    int n, m;
+    int modo = 1e9 + 7;
+    cin >> n >> m;
+    // cout << ((modFact(m - 1) % modo) * (((modInverse(modFact(n - 1)) % modo) * (modInverse(modFact(m - n)) % modo)) % modo)) % modo;
+    cout << nCr(n + m - 1, m);
     cout << '\n';
   }
   return 0;

@@ -330,42 +330,97 @@ bool sortd(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second > b.
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-const int N = 2 * 1e5 + 5;
-int v[N];
-void rec(int node, int parent, vector<vector<int>> &adjList)
+const int m = 1e9 + 7;
+vector<vector<int>> multi(vector<vector<int>> &a, vector<vector<int>> &b)
 {
-  for (auto it : adjList[node])
-  {
-    // cout << parent << " " << node << endl;
-    if (it == parent)
-      continue;
-    rec(it, node, adjList);
-    v[node] += v[it] + 1;
-  }
-  return;
+  vector<vector<int>> res(2, vector<int>(2, 0));
+  // a b
+  // c d
+  res[0][0] = (a[0][0] * b[0][0] % m + a[0][1] * b[0][1] % m) % m;
+  res[0][1] = (a[0][0] * b[0][1] % m + a[0][1] * b[1][1] % m) % m;
+  res[1][0] = (a[1][0] * b[0][0] % m + a[1][1] * b[1][0] % m) % m;
+  res[1][1] = (a[1][0] * b[0][1] % m + a[1][1] * b[1][1] % m) % m;
+  return res;
 }
+void power(vector<vector<int>> &v, vector<vector<int>> &result, int n)
+{
+  if (n == 0 || n == 1)
+  {
+    result = v;
+    return;
+  }
+
+  vector<vector<int>> temp;
+  power(v, temp, n / 2);
+  result = multi(temp, temp);
+
+  if (n % 2 != 0)
+  {
+    result = multi(result, v);
+  }
+}
+
+int fib(int n)
+{
+  if (n <= 0)
+    return 0;
+
+  vector<vector<int>> base = {{1, 1}, {1, 0}};
+  vector<vector<int>> result;
+
+  power(base, result, n - 1);
+
+  return result[0][0] % m;
+}
+
+// void f(int v[2][2], int n)
+// {
+//   if (n == 0 || n == 1)
+//   {
+//     return;
+//   }
+//   vector<vector<int>> res;
+//   if (n % 2 == 0)
+//   {
+//     f(v, n / 2);
+//     // multi(v, v);
+//     res = multi(v, v);
+//   }
+//   else
+//   {
+//     f(v, n / 2);
+//     res= multi(v, v);
+//     int a[2][2] = {{1, 1}, {1, 0}};
+
+//     res= multi(res, a);
+//   }
+//   v=res;
+// }
+// int fib(int n, int v[2][2])
+// {
+//   f(v, n);
+//   cout << v[0][0] << " " << v[0][1] << " " << v[1][0] << " " << v[1][1] << endl;
+//   return v[0][0];
+// }
+
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   ll t = 1;
+  // cin. >> t;
   while (t--)
   {
     int n;
     cin >> n;
-    vector<vector<int>> adjList(n + 1);
-    for (int i = 2; i <= n; i++)
-    {
-      int x;
-      cin >> x;
-      adjList[i].push_back(x);
-      adjList[x].push_back(i);
-    }
-    rec(1, -1, adjList);
-    for (int i = 1; i <= n; i++)
-    {
-      cout << v[i] << " ";
-    }
+    // int v[2][2];
+    vector<vector<int>> v(2, vector<int>(2));
+    v[0][0] = 1;
+    v[0][1] = 1;
+    v[1][0] = 1;
+    v[1][1] = 0;
+
+    cout << fib(n);
     cout << '\n';
   }
   return 0;

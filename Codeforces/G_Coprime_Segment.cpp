@@ -330,42 +330,53 @@ bool sortd(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second > b.
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-const int N = 2 * 1e5 + 5;
-int v[N];
-void rec(int node, int parent, vector<vector<int>> &adjList)
-{
-  for (auto it : adjList[node])
-  {
-    // cout << parent << " " << node << endl;
-    if (it == parent)
-      continue;
-    rec(it, node, adjList);
-    v[node] += v[it] + 1;
-  }
-  return;
-}
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   ll t = 1;
+  // cin >> t;
   while (t--)
   {
     int n;
     cin >> n;
-    vector<vector<int>> adjList(n + 1);
-    for (int i = 2; i <= n; i++)
+    vector<int> v(n);
+    cin >> v;
+    int res = 1e18;
+    map<int, int> mp;
+    mp[v[0]] = 0;
+    int j = 1;
+    if (v[0] == 1)
     {
-      int x;
-      cin >> x;
-      adjList[i].push_back(x);
-      adjList[x].push_back(i);
+      cout << 1;
+      continue;
     }
-    rec(1, -1, adjList);
-    for (int i = 1; i <= n; i++)
+    while (j < n)
     {
-      cout << v[i] << " ";
+
+      mp[v[j]] = j;
+      map<int, int> temp;
+      for (auto it : mp)
+      {
+        // gcd till i j
+        int i = it.second;
+        int gcd = it.first;
+        gcd = __gcd(gcd, v[j]);
+        if (gcd == 1)
+        {
+          res = min(res, j - i + 1);
+        }
+        if (temp.count(gcd) == 0)
+          temp[gcd] = i;
+        else
+          temp[gcd] = max(temp[gcd], i);
+      }
+      swap(temp, mp);
+      j++;
     }
+
+    cout << (res == 1e18 ? -1 : res);
+
     cout << '\n';
   }
   return 0;

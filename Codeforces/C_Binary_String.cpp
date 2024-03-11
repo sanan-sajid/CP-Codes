@@ -330,42 +330,113 @@ bool sortd(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second > b.
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-const int N = 2 * 1e5 + 5;
-int v[N];
-void rec(int node, int parent, vector<vector<int>> &adjList)
+vector<int> pre1, pre2;
+int n;
+bool f(string &s, int x)
 {
-  for (auto it : adjList[node])
+  // x->1 removed
+  int score = 1e10;
+  for (int i = 0; i <= x; i++)
   {
-    // cout << parent << " " << node << endl;
-    if (it == parent)
-      continue;
-    rec(it, node, adjList);
-    v[node] += v[it] + 1;
+    int l = i;
+    int r = x - i;
+    int oneRem = (pre2[l] - 0) + (pre2[n] - pre2[n - r]);
+    int zeroLeft = pre1[n - r] - pre1[l];
+    // cout << (pre2[l] - 0) + (pre2[n] - pre2[n - r]) << " ";
+    // cout << zeroLeft << endl;
+    score = min(max(oneRem, zeroLeft), score);
   }
-  return;
+  return (score <= x);
 }
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   ll t = 1;
+  cin >> t;
   while (t--)
   {
-    int n;
-    cin >> n;
-    vector<vector<int>> adjList(n + 1);
-    for (int i = 2; i <= n; i++)
-    {
-      int x;
-      cin >> x;
-      adjList[i].push_back(x);
-      adjList[x].push_back(i);
-    }
-    rec(1, -1, adjList);
+    string s;
+    cin >> s;
+    int one = count(all(s), '1');
+    n = s.size();
+    pre1.resize(n + 1, 0);
+    pre2.resize(n + 1, 0);
     for (int i = 1; i <= n; i++)
     {
-      cout << v[i] << " ";
+      pre1[i] += pre1[i - 1] + (s[i - 1] == '0');
+      pre2[i] += pre2[i - 1] + (s[i - 1] == '1');
     }
+    // cout << pre1 << endl
+    //      << pre2 << endl;
+    // cout << f(s, 1);
+    vector<int> pre, suff;
+    int temp = 0;
+    for (int i = 0; i < n; i++)
+    {
+      if (s[i] == '0')
+      {
+        temp++;
+        continue;
+      }
+      //// s[i]==1
+      pre.push_back(temp);
+    }
+    pre.push_back(temp);
+    temp = 0;
+    for (int i = n - 1; i >= 0; i--)
+    {
+      if (s[i] == '0')
+      {
+        temp++;
+        continue;
+      }
+      //// s[i]==1
+      suff.push_back(temp);
+    }
+    suff.push_back(temp);
+    // reverse(suff);
+    // cout << pre << endl
+    //      << suff;
+    int tmp = count(all(s), '0');
+    int l = 0, r = one;
+    while (l <= r)
+    {
+      int mid = (l + r) / 2;
+      bool f = 0;
+      // we will try to remove mid one
+      int cnt = 0;
+      for (int i = 0; i <= mid; i++)
+      {
+        int left = tmp;
+        left -= pre[i];
+        left -= suff[mid - i];
+        if (left <= mid)
+        {
+          f = 1;
+          break;
+        }
+      }
+      if (f)
+      {
+        r = mid - 1;
+      }
+      else
+      {
+        l = mid + 1;
+      }
+
+      // if (f(s, mid))
+      // {
+      //   r = mid - 1;
+      // }
+      // else
+      // {
+      //   l = mid + 1;
+      // }
+    }
+    cout << l;
+
     cout << '\n';
   }
   return 0;

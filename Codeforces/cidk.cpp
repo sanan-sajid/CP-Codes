@@ -330,43 +330,34 @@ bool sortd(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second > b.
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-const int N = 2 * 1e5 + 5;
-int v[N];
-void rec(int node, int parent, vector<vector<int>> &adjList)
-{
-  for (auto it : adjList[node])
-  {
-    // cout << parent << " " << node << endl;
-    if (it == parent)
-      continue;
-    rec(it, node, adjList);
-    v[node] += v[it] + 1;
-  }
-  return;
-}
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
+  int N = 1e6 + 5;
+  int M = 1e9 + 7;
+  int fac[N];
+  fac[0] = 1;
+  fac[1] = 1;
+  for (int i = 2; i <= N; i++)
+  {
+    fac[i] = (fac[i - 1] * i) % M;
+    // cout << fac[i];
+  }
   ll t = 1;
+  cin >> t;
   while (t--)
   {
-    int n;
-    cin >> n;
-    vector<vector<int>> adjList(n + 1);
-    for (int i = 2; i <= n; i++)
-    {
-      int x;
-      cin >> x;
-      adjList[i].push_back(x);
-      adjList[x].push_back(i);
-    }
-    rec(1, -1, adjList);
-    for (int i = 1; i <= n; i++)
-    {
-      cout << v[i] << " ";
-    }
-    cout << '\n';
+    int a, b;
+    cin >> a >> b;
+    // cout << nCr(4, 2);
+    int res = fac[a];
+    res = (res % M) * (modInverse(fac[a - b] % M)) % M;
+    res = (res % M) * (modInverse(fac[b], M)) % M;
+    cout << res;
+
+    cout
+        << '\n';
   }
   return 0;
 }

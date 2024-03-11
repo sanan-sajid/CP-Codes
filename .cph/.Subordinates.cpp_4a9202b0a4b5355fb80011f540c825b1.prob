@@ -1,0 +1,1 @@
+{"name":"Local: Subordinates","url":"c:\\Users\\LENOVO\\Desktop\\Coding Stuff\\code\\Subordinates.cpp","tests":[{"id":1709998314031,"input":"5\n1 1 2 3","output":"4 1 1 0 0"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\LENOVO\\Desktop\\Coding Stuff\\code\\Subordinates.cpp","group":"local","local":true}
