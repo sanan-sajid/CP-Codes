@@ -9,6 +9,7 @@ using namespace __gnu_pbds;
 typedef long long ll;
 const int n1 = 1e9 + 7;
 const int MX = 1e9;
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> pbdsMS;
 typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> pbds;
 
 void modadd(int &a, int b, int MOD) { a = ((a % MOD) + (b % MOD)) % MOD; }
@@ -173,6 +174,56 @@ struct Update
     node.andd = val;
   }
 };
+typedef unsigned long long ull;
+typedef long double lld;
+
+#ifndef ONLINE_JUDGE
+#define debug(x...)             \
+  cerr << "[" << #x << "] = ["; \
+  _print(x)
+#else
+#define debug(x)
+#endif
+void __print(long x) { cerr << x; }
+void __print(long long x) { cerr << x; }
+void __print(unsigned x) { cerr << x; }
+void __print(unsigned long x) { cerr << x; }
+void __print(unsigned long long x) { cerr << x; }
+void __print(float x) { cerr << x; }
+void __print(double x) { cerr << x; }
+void __print(long double x) { cerr << x; }
+void __print(char x) { cerr << '\'' << x << '\''; }
+void __print(const char *x) { cerr << '\"' << x << '\"'; }
+void __print(const string &x) { cerr << '\"' << x << '\"'; }
+void __print(bool x) { cerr << (x ? "true" : "false"); }
+
+template <typename T, typename V>
+void __print(const pair<T, V> &x)
+{
+  cerr << '{';
+  __print(x.first);
+  cerr << ',';
+  __print(x.second);
+  cerr << '}';
+}
+template <typename T>
+void __print(const T &x)
+{
+  int f = 0;
+  cerr << '{';
+  for (auto &i : x)
+    cerr << (f++ ? "," : ""), __print(i);
+  cerr << "}";
+}
+void _print() { cerr << "]\n"; }
+template <typename T, typename... V>
+void _print(T t, V... v)
+{
+  __print(t);
+  if (sizeof...(v))
+    cerr << ", ";
+  _print(v...);
+}
 void primeFactors(int n, vector<int> &v)
 {
   while (n % 2 == 0)
@@ -290,16 +341,25 @@ int nPr(int n, int r, int p = n1)
 }
 bool customComparator(pair<int, int> &a, pair<int, int> &b)
 {
-  // if (a.first == b.first)
-  // {
-  //   return a.second > b.second;
-  // }
+  if (a.first == b.first)
+  {
+    return a.second > b.second;
+  }
   return a.first < b.first;
 }
 int ceil2(int a, int b)
 {
   return (a + b - 1) / b;
 }
+// Sorting
+bool sorta(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second < b.second); }
+bool sortd(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second > b.second); }
+#ifndef ONLINE_JUDGE
+
+#else
+#define debug(...)
+#define debugArr(...)
+#endif
 /// ====================================BIT TRICKS==================================================
 // TO CHECK IF iTH BIT IS SET OR NOT
 // for (int j = 0; j < 31; j++)
@@ -319,84 +379,53 @@ int ceil2(int a, int b)
 // Finding no of element smaller than x in set->s.order_of_key(x);
 // finding element present at xth index in set->*s.find_by_order(x);
 // pbds s; // declaration
+// s.erase(s.find_by_order(s.order_of_key(v[i]))); -> to erase an item from set
+// to convert into multiset change pbdsMS
 /// ====================================End==================================================
 // upper_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] > x
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-vector<int> Z(string s)
-{
-  int n = s.size(), l = 0, r = 0;
-  vector<int> z(n);
-  for (int i = 1; i < n; i++)
-  {
-    if (i < r)
-    {
-      z[i] = min(r - i, z[i - l]);
-    }
-    while (i + z[i] < n && s[z[i]] == s[i + z[i]])
-    {
-      z[i]++;
-    }
-    if (i + z[i] > r)
-    {
-      l = i;
-      r = i + z[i];
-    }
-  }
-  return z;
-}
-// string strA = a + "$" + s;
-// vector<int> zA = Z(strA);
-// vector<int> aa;
-// for (int i = a.size() + 1; i < zA.size(); i++)
-// {
-//   if (zA[i] == a.size())
-//     aa.push_back(i - a.size() - 1);
-// }
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   ll t = 1;
+  cin >> t;
   while (t--)
   {
-    string s1, s2;
-    cin >> s1 >> s2;
-    string a = s2 + "$" + s1;
-    vector<int> za = Z(a);
-    int res = 0;
-    int tmp = s2.size();
-    // cout << za;
-    for (int i = s2.size() + 1; i < za.size(); i++)
+    int n, m;
+    cin >> n >> m;
+    string s;
+    cin >> s;
+    vi nz(n), no(n);
+    int nzero = -1, none = n + 1;
+    for (int i = 0; i < n; i++)
     {
-      if (za[i] == tmp)
-        res++;
+      if (s[i] == '0')
+        nzero = i;
+      nz[i] = nzero;
     }
-    cout << res;
-    // int n;
-    // cin >> n;
-    // vector<int> v(n);
-    // cin >> v;
-    // map<int, int> mp;
-    // int res = 1;
-    // int l = 0, r = 0;
-    // while (r < n)
-    // {
-    //   mp[v[r]]++;
-
-    //   while (mp[v[r]] != 1)
-    //   {
-    //     mp[v[l]]--;
-    //     l++;
-    //   }
-
-    //   res = max(res, r - l + 1);
-    //   r++;
-    // }
-
-    // cout << res;
-
-    return 0;
+    for (int i = n - 1; i >= 0; i--)
+    {
+      if (s[i] == '1')
+        none = i;
+      no[i] = none;
+    }
+    set<pair<int, int>> set;
+    int mainstr = 0;
+    for (int i = 0; i < m; i++)
+    {
+      int a, b;
+      cin >> a >> b;
+      if (no[a - 1] > nz[b - 1])
+        mainstr = 1;
+      else
+        set.insert(make_pair(no[a - 1], nz[b - 1]));
+    }
+    debug(set);
+    cout << set.size() + mainstr << endl;
+    cout << '\n';
   }
+  return 0;
 }

@@ -1,12 +1,20 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
+using namespace __gnu_pbds;
 #define int long long
 #define all(v) v.begin(), v.end()
 #define vi vector<int>
 typedef long long ll;
 const int n1 = 1e9 + 7;
 const int MX = 1e9;
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> pbdsMS;
+typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> pbds;
 
+void modadd(int &a, int b, int MOD) { a = ((a % MOD) + (b % MOD)) % MOD; }
+void modsub(int &a, int b, int MOD) { a = ((a % MOD) - (b % MOD) + MOD) % MOD; }
+void modmul(int &a, int b, int MOD) { a = ((a % MOD) * (b % MOD)) % MOD; }
 // ================================== take ip/op like vector,pairs directly!==================================
 template <typename typC, typename typD>
 istream &operator>>(istream &cin, pair<typC, typD> &a) { return cin >> a.first >> a.second; }
@@ -293,6 +301,9 @@ int ceil2(int a, int b)
 {
   return (a + b - 1) / b;
 }
+// Sorting
+bool sorta(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second < b.second); }
+bool sortd(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second > b.second); }
 /// ====================================BIT TRICKS==================================================
 // TO CHECK IF iTH BIT IS SET OR NOT
 // for (int j = 0; j < 31; j++)
@@ -308,6 +319,12 @@ int ceil2(int a, int b)
 // 1.never erase anything from ds(map,set,vector ,etc )while iterating , store the elements in another ds which to be
 //   deleted then run another loop and use erase fxn.
 
+/// ====================================PBDS==================================================
+// Finding no of element smaller than x in set->s.order_of_key(x);
+// finding element present at xth index in set->*s.find_by_order(x);
+// pbds s; // declaration
+// s.erase(s.find_by_order(s.order_of_key(v[i]))); -> to erase an item from set
+// to convert into multiset change pbdsMS
 /// ====================================End==================================================
 // upper_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] > x
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
@@ -321,47 +338,25 @@ int32_t main()
   cin >> t;
   while (t--)
   {
+    const int MOD = 998244353;
     int n;
     cin >> n;
     string s;
     cin >> s;
-    int res = 0;
-    vector<int> prefixOne(n + 1);
-    vector<int> prefixZero(n + 1);
-
-    for (int i = 1; i <= n; i++)
-      prefixOne[i] = prefixOne[i - 1] + (s[i - 1] == '1');
-    for (int i = 1; i <= n; i++)
-      prefixZero[i] = prefixZero[i - 1] + (s[i - 1] == '0');
-
-    s = '?' + s; // adjusting index
-    for (int i = 1; i <= n; i++)
+    int cnt = 1;
+    int res = 1;
+    for (int i = 1; i < n; i++)
     {
-      int box = i - 1;
-      int req;
-      if (s[i] == '1')
-        req = (i + box + 1) / 2 - prefixOne[i];
-      else
-        req = (i + box + 1) / 2 - prefixZero[i];
-
-      cout << i << " " << req << " " << box << endl;
-      if (req <= 0)
-      {
-        res = res + power(2, box);
-      }
-      else if (res > box)
-      {
-      }
+      if (s[i] == s[i - 1])
+        cnt = (2 * (cnt % MOD));
       else
       {
-        box = box - req;
-        res = res + power(2, box);
+        cnt = 1;
       }
+      res = ((res % MOD) + (cnt % MOD)) % MOD;
     }
-
     cout << res;
-
-    cout << endl;
+    cout << '\n';
   }
   return 0;
 }

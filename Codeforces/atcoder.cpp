@@ -174,6 +174,56 @@ struct Update
     node.andd = val;
   }
 };
+typedef unsigned long long ull;
+typedef long double lld;
+
+#ifndef ONLINE_JUDGE
+#define debug(x...)             \
+  cerr << "[" << #x << "] = ["; \
+  _print(x)
+#else
+#define debug(x)
+#endif
+void __print(long x) { cerr << x; }
+void __print(long long x) { cerr << x; }
+void __print(unsigned x) { cerr << x; }
+void __print(unsigned long x) { cerr << x; }
+void __print(unsigned long long x) { cerr << x; }
+void __print(float x) { cerr << x; }
+void __print(double x) { cerr << x; }
+void __print(long double x) { cerr << x; }
+void __print(char x) { cerr << '\'' << x << '\''; }
+void __print(const char *x) { cerr << '\"' << x << '\"'; }
+void __print(const string &x) { cerr << '\"' << x << '\"'; }
+void __print(bool x) { cerr << (x ? "true" : "false"); }
+
+template <typename T, typename V>
+void __print(const pair<T, V> &x)
+{
+  cerr << '{';
+  __print(x.first);
+  cerr << ',';
+  __print(x.second);
+  cerr << '}';
+}
+template <typename T>
+void __print(const T &x)
+{
+  int f = 0;
+  cerr << '{';
+  for (auto &i : x)
+    cerr << (f++ ? "," : ""), __print(i);
+  cerr << "}";
+}
+void _print() { cerr << "]\n"; }
+template <typename T, typename... V>
+void _print(T t, V... v)
+{
+  __print(t);
+  if (sizeof...(v))
+    cerr << ", ";
+  _print(v...);
+}
 void primeFactors(int n, vector<int> &v)
 {
   while (n % 2 == 0)
@@ -304,6 +354,12 @@ int ceil2(int a, int b)
 // Sorting
 bool sorta(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second < b.second); }
 bool sortd(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second > b.second); }
+#ifndef ONLINE_JUDGE
+
+#else
+#define debug(...)
+#define debugArr(...)
+#endif
 /// ====================================BIT TRICKS==================================================
 // TO CHECK IF iTH BIT IS SET OR NOT
 // for (int j = 0; j < 31; j++)
@@ -330,6 +386,102 @@ bool sortd(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second > b.
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
+class DSU
+{
+  int *parent;
+  int *rank;
+
+public:
+  DSU(int n)
+  {
+    parent = new int[n];
+    rank = new int[n];
+
+    for (int i = 0; i < n; i++)
+    {
+      parent[i] = -1;
+      rank[i] = 1;
+    }
+  }
+
+  // Find function
+  int find(int i)
+  {
+    if (parent[i] == -1)
+      return i;
+
+    return parent[i] = find(parent[i]);
+  }
+
+  // Union function
+  void unite(int x, int y)
+  {
+    int s1 = find(x);
+    int s2 = find(y);
+
+    if (s1 != s2)
+    {
+      if (rank[s1] < rank[s2])
+      {
+        parent[s1] = s2;
+      }
+      else if (rank[s1] > rank[s2])
+      {
+        parent[s2] = s1;
+      }
+      else
+      {
+        parent[s2] = s1;
+        rank[s1] += 1;
+      }
+    }
+  }
+};
+
+class Graph
+{
+  vector<vector<int>> edgelist;
+  int V;
+
+public:
+  Graph(int V) { this->V = V; }
+
+  // Function to add edge in a graph
+  void addEdge(int x, int y, int w)
+  {
+    edgelist.push_back({w, x, y});
+  }
+
+  void kruskals_mst(int n)
+  {
+    sort(edgelist.begin(), edgelist.end());
+    DSU s(V);
+    int ans = 0;
+
+    for (auto edge : edgelist)
+    {
+      int w = edge[0];
+      int x = edge[1];
+      int y = edge[2];
+
+      if (s.find(x) != s.find(y))
+      {
+        s.unite(x, y);
+        ans += w;
+      }
+    }
+    for (int i = 0; i < n; i++)
+    {
+      if (s.find(0) != s.find(i))
+      {
+        cout << -1;
+        return;
+      }
+    }
+    cout << ans;
+  }
+};
+
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
@@ -338,45 +490,41 @@ int32_t main()
   // cin >> t;
   while (t--)
   {
-    int n;
-    cin >> n;
-    vector<int> v(n);
-    cin >> v;
-    list<int> l;
-    map<int, list<int>::iterator> mp;
-    for (auto it : v)
+    int n, m;
+    cin >> n >> m;
+    Graph g(n);
+    // n nodes , m operations
+    vector<vector<pair<int, int>>> adjList(n + 1);
+    while (m--)
     {
-      l.push_back(it);
-      auto idk = l.end();
-      idk--;
-      mp[it] = idk;
-    }
+      int k, c;
+      cin >> k >> c;
+      // vector<int> temp(k);
+      // cin >> temp;
 
-    int q;
-    cin >> q;
-    while (q--)
-    {
-      int type;
-      cin >> type;
-      if (type == 1)
+      // for (int i = 0; i < k; i++)
+      // {
+      //   for (int j = i + 1; j < k; j++)
+      //   {
+      //     adjList[i].push_back({j, c});
+      //     g.addEdge(temp[i] - 1, temp[j] - 1, c);
+      //   }
+      // }
+      int u = -1;
+      while (k--)
       {
-        int a, b;
-        cin >> a >> b;
-        auto it = mp[a];
-        it++;
-        l.insert(it, 1, b);
-        mp[b] = --it;
-      }
-      else
-      {
-        int a;
-        cin >> a;
-        l.erase(mp[a]);
+        int v;
+        cin >> v;
+        v--;
+        if (u == -1)
+        {
+          u = v;
+          continue;
+        }
+        g.addEdge(u, v, c);
       }
     }
-
-    for (auto it : l)
-      cout << it << " ";
+    g.kruskals_mst(n);
 
     cout << '\n';
   }

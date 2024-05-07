@@ -174,6 +174,56 @@ struct Update
     node.andd = val;
   }
 };
+typedef unsigned long long ull;
+typedef long double lld;
+
+#ifndef ONLINE_JUDGE
+#define debug(x...)             \
+  cerr << "[" << #x << "] = ["; \
+  _print(x)
+#else
+#define debug(x)
+#endif
+void __print(long x) { cerr << x; }
+void __print(long long x) { cerr << x; }
+void __print(unsigned x) { cerr << x; }
+void __print(unsigned long x) { cerr << x; }
+void __print(unsigned long long x) { cerr << x; }
+void __print(float x) { cerr << x; }
+void __print(double x) { cerr << x; }
+void __print(long double x) { cerr << x; }
+void __print(char x) { cerr << '\'' << x << '\''; }
+void __print(const char *x) { cerr << '\"' << x << '\"'; }
+void __print(const string &x) { cerr << '\"' << x << '\"'; }
+void __print(bool x) { cerr << (x ? "true" : "false"); }
+
+template <typename T, typename V>
+void __print(const pair<T, V> &x)
+{
+  cerr << '{';
+  __print(x.first);
+  cerr << ',';
+  __print(x.second);
+  cerr << '}';
+}
+template <typename T>
+void __print(const T &x)
+{
+  int f = 0;
+  cerr << '{';
+  for (auto &i : x)
+    cerr << (f++ ? "," : ""), __print(i);
+  cerr << "}";
+}
+void _print() { cerr << "]\n"; }
+template <typename T, typename... V>
+void _print(T t, V... v)
+{
+  __print(t);
+  if (sizeof...(v))
+    cerr << ", ";
+  _print(v...);
+}
 void primeFactors(int n, vector<int> &v)
 {
   while (n % 2 == 0)
@@ -301,6 +351,15 @@ int ceil2(int a, int b)
 {
   return (a + b - 1) / b;
 }
+// Sorting
+bool sorta(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second < b.second); }
+bool sortd(const pair<ll, ll> &a, const pair<ll, ll> &b) { return (a.second > b.second); }
+#ifndef ONLINE_JUDGE
+
+#else
+#define debug(...)
+#define debugArr(...)
+#endif
 /// ====================================BIT TRICKS==================================================
 // TO CHECK IF iTH BIT IS SET OR NOT
 // for (int j = 0; j < 31; j++)
@@ -327,11 +386,6 @@ int ceil2(int a, int b)
 // lower_bound(a.begin(),a.end(),x)-a.begin(); returns index ->arr[ind] >= x
 // MUST SORT THE ARRAY FIRST!! BEFORE USING UNIQUE
 // n = unique(all(v)) - v.begin(); REMOVE DUPS AND IMP TO STORE NEW VALUE OF N SIZE OF ARRAY
-
-bool f()
-{
-}
-
 int32_t main()
 {
   ios_base::sync_with_stdio(false);
@@ -342,9 +396,25 @@ int32_t main()
   {
     int n;
     cin >> n;
-    vector<int> v(n);
-    cin >> v;
-
+    vector<int> v(n + 1);
+    for (int i = 0; i < n; i++)
+      cin >> v[i + 1];
+    vector<int> dp(n + 1, 0);
+    dp[0] = 1;
+    for (int i = 1; i <= n; i++)
+    {
+      if (dp[i - 1] == 1)
+      {
+        if (i + v[i] <= n)
+          dp[i + v[i]] = 1;
+      }
+      if (i - 1 - v[i] >= 0 && dp[i - 1 - v[i]] == 1)
+      {
+        dp[i] = 1;
+      }
+    }
+    debug(dp);
+    cout << (dp[n] == 1 ? "YES" : "NO");
     cout << '\n';
   }
   return 0;
